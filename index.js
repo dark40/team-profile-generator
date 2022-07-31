@@ -1,11 +1,17 @@
-const inquirer = require('inquirer')
+const inquirer = require('inquirer');
+const Manager = require('./lib/Manager')
+const Engineer = require('./lib/Engineer')
+const Intern = require('./lib/Intern')
+const fs = require('fs')
 
+const render = require('./src/page-template')
+
+const teamArr = [];
 
 const addManager = () => {
-    console.log('Welcome to the team generator!\n Use `npm run reset` to reset the dist/folder')
-
+    console.log('Welcome to the team generator!\nUse `npm run reset` to reset the dist/folder\n')
+    console.log("Please build your team 👥");
     inquirer.prompt([
-        console.log("Please build your team 👥"),
         {
             type: 'input',
             name: 'manager_name',
@@ -33,6 +39,15 @@ const addManager = () => {
             choices: ['Engineer', 'Intern', "I don't want to add any more team members"]
         },
     ])
+    .then( (answers) => {
+        const manager = new Manager(
+            answers.manager_name,
+            answers.manager_id,
+            answers.manager_email,
+            answers.manager_number
+        );
+        teamArr.push(manager);
+    })
     .then( val => {
         if (val.EngineerOrIntern === 'Engineer'){
             addEngineer();
@@ -73,6 +88,15 @@ const addEngineer = () => {
             choices: ['Engineer', 'Intern', "I don't want to add any more team members"]
         },
     ])
+    .then( (answers) => {
+        const engineer = new Engineer(
+            answers.engineer_name,
+            answers.engineer_id,
+            answers.engineer_email,
+            answers.engineer_git
+        );
+        teamArr.push(engineer)
+    })
     .then( val => {
         if (val.EngineerOrIntern === 'Engineer'){
             addEngineer();
@@ -113,6 +137,15 @@ const addIntern = () => {
             choices: ['Engineer', 'Intern', "I don't want to add any more team members"]
         },
     ])
+    .then( (answers) => {
+        const intern = new Intern(
+            answers.intern_name,
+            answers.intern_id,
+            answers.intern_email,
+            answers.intern_school
+        );
+        teamArr.push(intern)
+    })
     .then( val => {
         if (val.EngineerOrIntern === 'Engineer'){
             addEngineer();
@@ -123,3 +156,12 @@ const addIntern = () => {
         }
     })
 }
+
+
+// Create a function to  initialize the app
+const init = () => {
+    addManager()
+    .then(fs.writeFileSync('./dist/team.html', render(teamArr)))
+}
+
+init()

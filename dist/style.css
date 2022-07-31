@@ -7,3 +7,20 @@ h1 {
     padding: 50px 0;
     color: white;
 }
+
+.card {
+    box-shadow: 5px 5px 10px gray;
+}
+
+.card-header {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.card-body {
+    background-color: lightgray;
+}
+
+ul {
+    border-color: darkgray;
+}
