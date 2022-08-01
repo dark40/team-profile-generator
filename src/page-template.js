@@ -9,7 +9,7 @@ const generateManager = manager => {
             <div class="card-body">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">ID: ${manager.getId()}</li>
-                    <li class="list-group-item">Email: ${manager.getEmail()}</li>
+                    <li class="list-group-item">Email: <a href="mailto:${manager.getEmail()}">${manager.getEmail()}</a></li>
                     <li class="list-group-item">Office number: ${manager.getOfficeNumber()}</li>
                   </ul>
               </div>
@@ -22,13 +22,13 @@ const generateEngineer = engineer => {
         <div class="card" style="width: 16rem;">
             <div class="card-header">
               <h3>${engineer.getName()}</h3>
-              <h4>☕ ${engineer.getRole()}</h4>
+              <h4>🕶 ${engineer.getRole()}</h4>
             </div>
             <div class="card-body">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">ID: ${engineer.getId()}</li>
-                    <li class="list-group-item">Email: ${engineer.getEmail()}</li>
-                    <li class="list-group-item">Github: ${engineer.getGithub()}</li>
+                    <li class="list-group-item">Email: <a href="mailto:${engineer.getEmail()}">${engineer.getEmail()}</a></li>
+                    <li class="list-group-item">Github: <a href="https://www.github.com/${engineer.getGithub()}" target="_blank">${engineer.getGithub()}</a></li>
                   </ul>
               </div>
           </div>`
@@ -39,12 +39,12 @@ const generateIntern = intern => {
         <div class="card" style="width: 16rem;">
             <div class="card-header">
               <h3>${intern.getName()}</h3>
-              <h4>☕ ${intern.getRole()}</h4>
+              <h4>🎓 ${intern.getRole()}</h4>
             </div>
             <div class="card-body">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">ID: ${intern.getId()}</li>
-                    <li class="list-group-item">Email: ${intern.getEmail()}</li>
+                    <li class="list-group-item">Email: <a href="mailto:${intern.getEmail()}">${intern.getEmail()}</a></li>
                     <li class="list-group-item">School: ${intern.getSchool()}</li>
                   </ul>
               </div>
@@ -53,23 +53,26 @@ const generateIntern = intern => {
 
 
 
-const addTeamHTML = (teamArr) => {
+const addTeamHTML = (team) => {
     let htmlArr = '';
+    team = team || []
 
-    for (i = 0; i < teamArr.length; i++) {
-        if (teamArr[i].getRole === 'Manager') {
-            htmlArr += generateManager(teamArr[i]);
+    for (i = 0; i < team.length; i++) {
+        if (team[i].getRole() === 'Manager') {
+            htmlArr += generateManager(team[i]);
         }
-        if (teamArr[i].getRole === 'Engineer') {
-            htmlArr += generateEngineer(teamArr[i]);
+        if (team[i].getRole() === 'Engineer') {
+            htmlArr += generateEngineer(team[i]);
         }
-        if (teamArr[i].getRole === 'Intern') {
-            htmlArr += generateIntern(teamArr[i]);
+        if (team[i].getRole() === 'Intern') {
+            htmlArr += generateIntern(team[i]);
         }
     }
+
+    return htmlArr
 }
 
-const htmlTemp = (data) => {
+const htmlTemp = data => {
     return `
     <!DOCTYPE html>
     <html lang="en">
@@ -92,7 +95,7 @@ const htmlTemp = (data) => {
 </header>
 
 <body>
-<div class="container">
+<div class="container-fluid box">
 ${addTeamHTML(data)}
     
 
@@ -107,5 +110,5 @@ ${addTeamHTML(data)}
 }
 
 
-module.exports = htmlTemp
+module.exports = htmlTemp;
 

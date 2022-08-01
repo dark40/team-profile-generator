@@ -9,7 +9,7 @@ const render = require('./src/page-template')
 const teamArr = [];
 
 const addManager = () => {
-    console.log('Welcome to the team generator!\nUse `npm run reset` to reset the dist/folder\n')
+    console.log('Welcome to the team generator!\n')
     console.log("Please build your team 👥");
     inquirer.prompt([
         {
@@ -39,24 +39,24 @@ const addManager = () => {
             choices: ['Engineer', 'Intern', "I don't want to add any more team members"]
         },
     ])
-    .then( (answers) => {
-        const manager = new Manager(
-            answers.manager_name,
-            answers.manager_id,
-            answers.manager_email,
-            answers.manager_number
-        );
-        teamArr.push(manager);
-    })
-    .then( val => {
-        if (val.EngineerOrIntern === 'Engineer'){
-            addEngineer();
-        } else if (val.EngineerOrIntern === 'Intern') {
-            addIntern();
-        } else {
-            return;
-        }
-    })
+        .then((answers) => {
+            const manager = new Manager(
+                answers.manager_name,
+                answers.manager_id,
+                answers.manager_email,
+                answers.manager_number
+            );
+            teamArr.push(manager);
+
+            if (answers.EngineerOrIntern === 'Engineer') {
+                addEngineer();
+            } else if (answers.EngineerOrIntern === 'Intern') {
+                addIntern();
+            } else if (answers.EngineerOrIntern === "I don't want to add any more team members") {
+                writeToFile(teamArr);
+            }
+        })
+
 }
 
 const addEngineer = () => {
@@ -88,24 +88,24 @@ const addEngineer = () => {
             choices: ['Engineer', 'Intern', "I don't want to add any more team members"]
         },
     ])
-    .then( (answers) => {
-        const engineer = new Engineer(
-            answers.engineer_name,
-            answers.engineer_id,
-            answers.engineer_email,
-            answers.engineer_git
-        );
-        teamArr.push(engineer)
-    })
-    .then( val => {
-        if (val.EngineerOrIntern === 'Engineer'){
-            addEngineer();
-        } else if (val.EngineerOrIntern === 'Intern') {
-            addIntern();
-        } else {
-            return;
-        }
-    })
+        .then((answers) => {
+            const engineer = new Engineer(
+                answers.engineer_name,
+                answers.engineer_id,
+                answers.engineer_email,
+                answers.engineer_git
+            );
+            teamArr.push(engineer)
+
+            if (answers.EngineerOrIntern === 'Engineer') {
+                addEngineer();
+            } else if (answers.EngineerOrIntern === 'Intern') {
+                addIntern();
+            } else if (answers.EngineerOrIntern === "I don't want to add any more team members") {
+                writeToFile(teamArr);
+            }
+        })
+
 }
 
 const addIntern = () => {
@@ -137,31 +137,35 @@ const addIntern = () => {
             choices: ['Engineer', 'Intern', "I don't want to add any more team members"]
         },
     ])
-    .then( (answers) => {
-        const intern = new Intern(
-            answers.intern_name,
-            answers.intern_id,
-            answers.intern_email,
-            answers.intern_school
-        );
-        teamArr.push(intern)
-    })
-    .then( val => {
-        if (val.EngineerOrIntern === 'Engineer'){
-            addEngineer();
-        } else if (val.EngineerOrIntern === 'Intern') {
-            addIntern();
-        } else {
-            return;
-        }
-    })
+        .then((answers) => {
+            const intern = new Intern(
+                answers.intern_name,
+                answers.intern_id,
+                answers.intern_email,
+                answers.intern_school
+            );
+            teamArr.push(intern)
+
+            if (answers.EngineerOrIntern === 'Engineer') {
+                addEngineer();
+            } else if (answers.EngineerOrIntern === 'Intern') {
+                addIntern();
+            } else if (answers.EngineerOrIntern === "I don't want to add any more team members") {
+                writeToFile(teamArr);
+            }
+        })
+
 }
 
 
 // Create a function to  initialize the app
 const init = () => {
     addManager()
-    .then(fs.writeFileSync('./dist/team.html', render(teamArr)))
 }
+
+const writeToFile = () => {
+    fs.writeFileSync('./dist/team.html', render(teamArr))
+}
+
 
 init()
